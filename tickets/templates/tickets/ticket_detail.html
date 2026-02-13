@@ -1,26 +1,46 @@
-<!doctype html>
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <title>Ticket #{{ ticket.id }}</title>
-  </head>
-  <body>
-    <p><a href="/tickets/">← Back to tickets</a></p>
+{% extends "tickets/base.html" %}
 
-    <h1>Ticket #{{ ticket.id }} — {{ ticket.title }}</h1>
+{% block title %}Ticket #{{ ticket.id }} · ServiceDesk{% endblock %}
 
-    <p><strong>Status:</strong> {{ ticket.status }}</p>
-    <p><strong>Priority:</strong> {{ ticket.priority }}</p>
+{% block topbar_actions %}
+  <a class="btn" href="/tickets/">All tickets</a>
+  <a class="btn primary" href="/tickets/new/">+ New ticket</a>
+{% endblock %}
 
-    {% if ticket.description %}
-      <p><strong>Description:</strong></p>
-      <p>{{ ticket.description }}</p>
-    {% else %}
-      <p><em>No description provided.</em></p>
-    {% endif %}
+{% block content %}
+  <div class="card">
+    <div class="card-header">
+      <h2>Ticket #{{ ticket.id }} — {{ ticket.title }}</h2>
+      <div class="sub">A clear view of the issue and its current state.</div>
+    </div>
 
-    <hr />
+    <div class="card-body">
+      <div class="badges" style="justify-content:flex-start;">
+        <span class="badge info">{{ ticket.status }}</span>
 
-    <p><small>Created: {{ ticket.created_at }} | Updated: {{ ticket.updated_at }}</small></p>
-  </body>
-</html>
+        {% if ticket.priority == "URGENT" or ticket.priority == "HIGH" %}
+          <span class="badge bad">{{ ticket.priority }}</span>
+        {% elif ticket.priority == "MEDIUM" %}
+          <span class="badge warn">{{ ticket.priority }}</span>
+        {% else %}
+          <span class="badge good">{{ ticket.priority }}</span>
+        {% endif %}
+      </div>
+
+      <div class="divider"></div>
+
+      {% if ticket.description %}
+        <p style="margin:0; line-height:1.6;">{{ ticket.description }}</p>
+      {% else %}
+        <p class="small"><em>No description provided.</em></p>
+      {% endif %}
+
+      <div class="divider"></div>
+
+      <p class="small">
+        Created: {{ ticket.created_at|date:"j M Y, H:i" }} ·
+        Updated: {{ ticket.updated_at|date:"j M Y, H:i" }}
+      </p>
+    </div>
+  </div>
+{% endblock %}

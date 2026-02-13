@@ -1,25 +1,58 @@
-<!doctype html>
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <title>Tickets</title>
-  </head>
-  <body>
-    <h1>Tickets</h1>
+{% extends "tickets/base.html" %}
 
-    {% if tickets %}
-      <ul>
-        {% for ticket in tickets %}
-          <li>
-            <a href="/tickets/{{ ticket.id }}/">
-              #{{ ticket.id }} — {{ ticket.title }}
-            </a>
-            ({{ ticket.status }} | {{ ticket.priority }})
-          </li>
-        {% endfor %}
-      </ul>
-    {% else %}
-      <p>No tickets yet.</p>
-    {% endif %}
-  </body>
-</html>
+{% block title %}Tickets · ServiceDesk{% endblock %}
+
+{% block topbar_actions %}
+  <a class="btn primary" href="/tickets/new/">+ New ticket</a>
+{% endblock %}
+
+{% block content %}
+  <div class="card">
+    <div class="card-header">
+      <h2>Tickets</h2>
+      <div class="sub">
+        {% if tickets %}
+          {{ tickets|length }} ticket{{ tickets|length|pluralize }}
+        {% else %}
+          No tickets yet
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="card-body">
+      {% if tickets %}
+        <ul class="list">
+          {% for ticket in tickets %}
+            <li>
+              <a class="row" href="/tickets/{{ ticket.id }}/">
+                <div class="row-left">
+                  <div class="row-title">#{{ ticket.id }} — {{ ticket.title }}</div>
+                  <div class="row-meta">
+                    Created {{ ticket.created_at|date:"j M Y, H:i" }}
+                  </div>
+                </div>
+
+                <div class="badges">
+                  <span class="badge info">{{ ticket.status }}</span>
+
+                  {% if ticket.priority == "URGENT" or ticket.priority == "HIGH" %}
+                    <span class="badge bad">{{ ticket.priority }}</span>
+                  {% elif ticket.priority == "MEDIUM" %}
+                    <span class="badge warn">{{ ticket.priority }}</span>
+                  {% else %}
+                    <span class="badge good">{{ ticket.priority }}</span>
+                  {% endif %}
+                </div>
+              </a>
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p class="small">Create your first ticket to get started.</p>
+        <div class="actions">
+          <a class="btn primary" href="/tickets/new/">+ New ticket</a>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+{% endblock %}

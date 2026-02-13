@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{% block title %}ServiceDesk{% endblock %}</title>
+
+    <style>
+      :root{
+        --bg: #0b1220;
+        --card: #0f1a2e;
+        --muted: #9fb0d0;
+        --text: #e8eefc;
+        --border: rgba(255,255,255,.10);
+        --shadow: 0 10px 30px rgba(0,0,0,.35);
+        --radius: 16px;
+
+        --good: rgba(74,222,128,.18);
+        --warn: rgba(251,191,36,.18);
+        --bad: rgba(248,113,113,.18);
+        --info: rgba(96,165,250,.18);
+      }
+
+      * { box-sizing: border-box; }
+      body{
+        margin:0;
+        font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+        background: radial-gradient(1200px 800px at 10% 10%, rgba(96,165,250,.18), transparent 55%),
+                    radial-gradient(900px 700px at 90% 20%, rgba(74,222,128,.12), transparent 55%),
+                    var(--bg);
+        color: var(--text);
+      }
+
+      a{ color: inherit; text-decoration: none; }
+      a:hover{ text-decoration: underline; }
+
+      .container{
+        max-width: 980px;
+        margin: 0 auto;
+        padding: 28px 18px 60px;
+      }
+
+      .topbar{
+        display:flex;
+        align-items:center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 16px 18px;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        background: rgba(15,26,46,.72);
+        box-shadow: var(--shadow);
+        backdrop-filter: blur(10px);
+      }
+
+      .brand{
+        display:flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+      .brand h1{
+        margin:0;
+        font-size: 18px;
+        letter-spacing: .2px;
+      }
+      .brand p{
+        margin:0;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .btn{
+        display:inline-flex;
+        align-items:center;
+        gap: 8px;
+        padding: 10px 14px;
+        border-radius: 12px;
+        border: 1px solid var(--border);
+        background: rgba(255,255,255,.06);
+        color: var(--text);
+        cursor:pointer;
+        font-weight: 600;
+        font-size: 14px;
+      }
+      .btn:hover{ background: rgba(255,255,255,.10); text-decoration:none; }
+      .btn.primary{ background: rgba(96,165,250,.18); }
+      .btn.primary:hover{ background: rgba(96,165,250,.28); }
+
+      .card{
+        margin-top: 18px;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        background: rgba(15,26,46,.72);
+        box-shadow: var(--shadow);
+        backdrop-filter: blur(10px);
+        overflow:hidden;
+      }
+
+      .card-header{
+        padding: 18px 18px 10px;
+        border-bottom: 1px solid var(--border);
+      }
+      .card-header h2{
+        margin:0;
+        font-size: 18px;
+      }
+      .card-header .sub{
+        margin-top: 6px;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .card-body{ padding: 16px 18px 18px; }
+
+      .list{
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display:flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .row{
+        display:flex;
+        align-items:center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 12px 12px;
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        background: rgba(255,255,255,.04);
+      }
+      .row:hover{ background: rgba(255,255,255,.07); }
+
+      .row-left{
+        min-width: 0;
+        display:flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+      .row-title{
+        font-weight: 700;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 620px;
+      }
+      .row-meta{
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .badges{
+        display:flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+      }
+
+      .badge{
+        padding: 6px 10px;
+        border-radius: 999px;
+        border: 1px solid var(--border);
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: .2px;
+      }
+      .badge.info{ background: var(--info); }
+      .badge.good{ background: var(--good); }
+      .badge.warn{ background: var(--warn); }
+      .badge.bad{ background: var(--bad); }
+
+      .form-grid{
+        display:grid;
+        gap: 14px;
+        max-width: 720px;
+      }
+      label{ font-weight: 700; font-size: 13px; }
+      input, textarea, select{
+        width:100%;
+        padding: 10px 12px;
+        border-radius: 12px;
+        border: 1px solid var(--border);
+        background: rgba(255,255,255,.06);
+        color: var(--text);
+        outline: none;
+      }
+      textarea{ min-height: 140px; resize: vertical; }
+
+      .help{
+        color: var(--muted);
+        font-size: 12px;
+        margin-top: 6px;
+      }
+
+      .actions{
+        display:flex;
+        gap: 10px;
+        margin-top: 6px;
+        flex-wrap: wrap;
+      }
+
+      .divider{
+        height: 1px;
+        background: var(--border);
+        margin: 16px 0;
+      }
+
+      .small{ color: var(--muted); font-size: 12px; }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <div class="topbar">
+        <div class="brand">
+          <h1>ServiceDesk</h1>
+          <p>Simple ticket tracking, clean and fast.</p>
+        </div>
+        <div>
+          {% block topbar_actions %}{% endblock %}
+        </div>
+      </div>
+
+      {% block content %}{% endblock %}
+    </div>
+  </body>
+</html>
