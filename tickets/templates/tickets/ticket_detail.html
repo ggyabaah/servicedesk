@@ -1,0 +1,26 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Ticket #{{ ticket.id }}</title>
+  </head>
+  <body>
+    <p><a href="/tickets/">← Back to tickets</a></p>
+
+    <h1>Ticket #{{ ticket.id }} — {{ ticket.title }}</h1>
+
+    <p><strong>Status:</strong> {{ ticket.status }}</p>
+    <p><strong>Priority:</strong> {{ ticket.priority }}</p>
+
+    {% if ticket.description %}
+      <p><strong>Description:</strong></p>
+      <p>{{ ticket.description }}</p>
+    {% else %}
+      <p><em>No description provided.</em></p>
+    {% endif %}
+
+    <hr />
+
+    <p><small>Created: {{ ticket.created_at }} | Updated: {{ ticket.updated_at }}</small></p>
+  </body>
+</html>

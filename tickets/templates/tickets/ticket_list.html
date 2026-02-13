@@ -1,0 +1,25 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Tickets</title>
+  </head>
+  <body>
+    <h1>Tickets</h1>
+
+    {% if tickets %}
+      <ul>
+        {% for ticket in tickets %}
+          <li>
+            <a href="/tickets/{{ ticket.id }}/">
+              #{{ ticket.id }} — {{ ticket.title }}
+            </a>
+            ({{ ticket.status }} | {{ ticket.priority }})
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>No tickets yet.</p>
+    {% endif %}
+  </body>
+</html>
