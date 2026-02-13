@@ -16,14 +16,14 @@
 
     <div class="card-body">
       <div class="badges" style="justify-content:flex-start;">
-        <span class="badge info">{{ ticket.status }}</span>
+        <span class="badge info">{{ ticket.get_status_display }}</span>
 
-        {% if ticket.priority == "URGENT" or ticket.priority == "HIGH" %}
-          <span class="badge bad">{{ ticket.priority }}</span>
-        {% elif ticket.priority == "MEDIUM" %}
-          <span class="badge warn">{{ ticket.priority }}</span>
+        {% if ticket.get_priority_display == "URGENT" or ticket.get_priority_display == "HIGH" %}
+          <span class="badge bad">{{ ticket.get_priority_display }}</span>
+        {% elif ticket.get_priority_display == "MEDIUM" %}
+          <span class="badge warn">{{ ticket.get_priority_display }}</span>
         {% else %}
-          <span class="badge good">{{ ticket.priority }}</span>
+          <span class="badge good">{{ ticket.get_priority_display }}</span>
         {% endif %}
       </div>
 
