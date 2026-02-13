@@ -219,7 +219,19 @@
           <p>Simple ticket tracking, clean and fast.</p>
         </div>
         <div>
-          {% block topbar_actions %}{% endblock %}
+          <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap; justify-content:flex-end;">
+            {% if user.is_authenticated %}
+              <span class="small">Signed in as <strong>{{ user.username }}</strong></span>
+               <form method="post" action="/accounts/logout/" style="margin:0;">
+                 {% csrf_token %}
+                 <button class="btn" type="submit">Sign out</button>
+               </form>
+
+            {% else %}
+              <a class="btn" href="/accounts/login/">Sign in</a>
+            {% endif %}
+            {% block topbar_actions %}{% endblock %}
+          </div>
         </div>
       </div>
 

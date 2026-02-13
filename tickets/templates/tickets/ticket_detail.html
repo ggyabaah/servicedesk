@@ -16,6 +16,11 @@
 
     <div class="card-body">
       <div class="badges" style="justify-content:flex-start;">
+        <div class="actions" style="margin-top: 14px;">
+          <a class="btn" href="/tickets/{{ ticket.id }}/edit/">Edit</a>
+          <a class="btn" href="/tickets/{{ ticket.id }}/delete/" style="background: rgba(248,113,113,.18);">Delete</a>
+        </div>
+
         <span class="badge info">{{ ticket.get_status_display }}</span>
 
         {% if ticket.get_priority_display == "URGENT" or ticket.get_priority_display == "HIGH" %}

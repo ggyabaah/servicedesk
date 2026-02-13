@@ -1,0 +1,30 @@
+{% extends "tickets/base.html" %}
+
+{% block title %}Delete ticket · ServiceDesk{% endblock %}
+
+{% block topbar_actions %}
+  <a class="btn" href="/tickets/{{ ticket.id }}/">Back</a>
+{% endblock %}
+
+{% block content %}
+  <div class="card">
+    <div class="card-header">
+      <h2>Delete ticket</h2>
+      <div class="sub">This action can’t be undone.</div>
+    </div>
+
+    <div class="card-body">
+      <p style="margin-top:0;">
+        Are you sure you want to delete <strong>#{{ ticket.id }} — {{ ticket.title }}</strong>?
+      </p>
+
+      <div class="actions">
+        <form method="post" style="margin:0;">
+          {% csrf_token %}
+          <button class="btn" type="submit" style="background: rgba(248,113,113,.18);">Yes, delete</button>
+        </form>
+        <a class="btn" href="/tickets/{{ ticket.id }}/">Cancel</a>
+      </div>
+    </div>
+  </div>
+{% endblock %}

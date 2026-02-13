@@ -9,8 +9,14 @@
 {% block content %}
   <div class="card">
     <div class="card-header">
-      <h2>Create ticket</h2>
-      <div class="sub">Keep it simple. Clear title, helpful description.</div>
+      {% if mode == "edit" %}
+        <h2>Edit ticket</h2>
+        <div class="sub">Update the details, status, or priority.</div>
+      {% else %}
+        <h2>Create ticket</h2>
+        <div class="sub">Keep it simple. Clear title, helpful description.</div>
+      {% endif %}
+
     </div>
 
     <div class="card-body">
@@ -40,7 +46,12 @@
         </div>
 
         <div class="actions">
-          <button class="btn primary" type="submit">Save ticket</button>
+          {% if mode == "edit" %}
+            <button class="btn primary" type="submit">Save changes</button>
+          {% else %}
+            <button class="btn primary" type="submit">Create ticket</button>
+          {% endif %}
+
           <a class="btn" href="/tickets/">Cancel</a>
         </div>
       </form>

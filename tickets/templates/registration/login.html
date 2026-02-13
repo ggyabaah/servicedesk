@@ -1,0 +1,33 @@
+{% extends "tickets/base.html" %}
+
+{% block title %}Login · ServiceDesk{% endblock %}
+
+{% block content %}
+  <div class="card" style="max-width: 520px; margin-left:auto; margin-right:auto;">
+    <div class="card-header">
+      <h2>Sign in</h2>
+      <div class="sub">Use your account to create and manage tickets.</div>
+    </div>
+
+    <div class="card-body">
+      <form method="post" class="form-grid">
+        {% csrf_token %}
+
+        <div>
+          <label for="{{ form.username.id_for_label }}">Username</label>
+          {{ form.username }}
+        </div>
+
+        <div>
+          <label for="{{ form.password.id_for_label }}">Password</label>
+          {{ form.password }}
+        </div>
+
+        <div class="actions">
+          <button class="btn primary" type="submit">Sign in</button>
+          <a class="btn" href="/tickets/">Back</a>
+        </div>
+      </form>
+    </div>
+  </div>
+{% endblock %}

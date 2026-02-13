@@ -1,8 +1,10 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import redirect, render, get_object_or_404
 from .models import Ticket
 from .forms import TicketForm
 from django.db.models import Q
 from django.http import HttpResponse
+from django.contrib.auth.decorators import login_required
+
 
 # Create your views here.
 def home(request):
@@ -37,7 +39,7 @@ def ticket_detail(request, ticket_id):
     ticket = get_object_or_404(Ticket, id=ticket_id)
     return render(request, "tickets/ticket_detail.html", {"ticket": ticket})
 
-
+@login_required
 def ticket_create(request):
     if request.method == "POST":
         form = TicketForm(request.POST)
@@ -48,3 +50,29 @@ def ticket_create(request):
         form = TicketForm()
 
     return render(request, "tickets/ticket_form.html", {"form": form})
+
+
+@login_required
+def ticket_update(request, ticket_id):
+    ticket = get_object_or_404(Ticket, id=ticket_id)
+
+    if request.method == "POST":
+        form = TicketForm(request.POST, instance=ticket)
+        if form.is_valid():
+            form.save()
+            return redirect("ticket_detail", ticket_id=ticket.id)
+    else:
+        form = TicketForm(instance=ticket)
+
+    return render(request, "tickets/ticket_form.html", {"form": form, "ticket": ticket, "mode": "edit"})
+
+
+@login_required
+def ticket_delete(request, ticket_id):
+    ticket = get_object_or_404(Ticket, id=ticket_id)
+
+    if request.method == "POST":
+        ticket.delete()
+        return redirect("ticket_list")
+
+    return render(request, "tickets/ticket_confirm_delete.html", {"ticket": ticket})
