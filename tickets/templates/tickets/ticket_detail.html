@@ -16,20 +16,25 @@
 
     <div class="card-body">
       <div class="badges" style="justify-content:flex-start;">
-        <div class="actions" style="margin-top: 14px;">
-          <a class="btn" href="/tickets/{{ ticket.id }}/edit/">Edit</a>
-          <a class="btn" href="/tickets/{{ ticket.id }}/delete/" style="background: rgba(248,113,113,.18);">Delete</a>
-        </div>
+      {% if user.is_authenticated %}
+        {% if user.is_staff or ticket.owner == user %}
+          <div class="actions" style="margin-top: 14px;">
+            <a class="btn" href="/tickets/{{ ticket.id }}/edit/">Edit</a>
+            <a class="btn" href="/tickets/{{ ticket.id }}/delete/" style="background: rgba(248,113,113,.18);">Delete</a>
+          </div>
+        {% endif %}
+      {% endif %}
 
         <span class="badge info">{{ ticket.get_status_display }}</span>
 
-        {% if ticket.get_priority_display == "URGENT" or ticket.get_priority_display == "HIGH" %}
+        {% if ticket.priority == "URGENT" or ticket.priority == "HIGH" %}
           <span class="badge bad">{{ ticket.get_priority_display }}</span>
-        {% elif ticket.get_priority_display == "MEDIUM" %}
+        {% elif ticket.priority == "MEDIUM" %}
           <span class="badge warn">{{ ticket.get_priority_display }}</span>
         {% else %}
           <span class="badge good">{{ ticket.get_priority_display }}</span>
         {% endif %}
+
       </div>
 
       <div class="divider"></div>

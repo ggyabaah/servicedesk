@@ -4,6 +4,7 @@ from .forms import TicketForm
 from django.db.models import Q
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseForbidden
 
 
 # Create your views here.
@@ -44,7 +45,9 @@ def ticket_create(request):
     if request.method == "POST":
         form = TicketForm(request.POST)
         if form.is_valid():
-            ticket = form.save()
+            ticket = form.save(commit=False)
+            ticket.owner = request.user
+            ticket.save()
             return redirect("ticket_detail", ticket_id=ticket.id)
     else:
         form = TicketForm()
@@ -61,9 +64,10 @@ def ticket_update(request, ticket_id):
         if form.is_valid():
             form.save()
             return redirect("ticket_detail", ticket_id=ticket.id)
+        if ticket.owner and ticket.owner != request.user and not request.user.is_staff:
+            return HttpResponseForbidden("You do not have permission to edit this ticket.")
     else:
         form = TicketForm(instance=ticket)
-
     return render(request, "tickets/ticket_form.html", {"form": form, "ticket": ticket, "mode": "edit"})
 
 
@@ -74,5 +78,6 @@ def ticket_delete(request, ticket_id):
     if request.method == "POST":
         ticket.delete()
         return redirect("ticket_list")
-
+    if ticket.owner and ticket.owner != request.user and not request.user.is_staff:
+        return HttpResponseForbidden("You do not have permission to edit this ticket.")
     return render(request, "tickets/ticket_confirm_delete.html", {"ticket": ticket})

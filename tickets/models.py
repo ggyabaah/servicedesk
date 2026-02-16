@@ -1,4 +1,6 @@
 from django.db import models
+from django.conf import settings
+
 
 class Ticket(models.Model):
     class Status(models.TextChoices):
@@ -26,6 +28,14 @@ class Ticket(models.Model):
         max_length=10,
         choices=Priority.choices,
         default=Priority.MEDIUM
+    )
+    
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="tickets",
+        null=True,
+        blank=True,
     )
 
     created_at = models.DateTimeField(auto_now_add=True)
