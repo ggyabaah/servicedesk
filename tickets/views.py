@@ -78,18 +78,24 @@ def ticket_create(request):
 def ticket_update(request, ticket_id):
     ticket = get_object_or_404(Ticket, id=ticket_id)
 
+    # Permission check must happen for BOTH GET and POST
+    if ticket.owner != request.user and not request.user.is_staff:
+        return HttpResponseForbidden("You do not have permission to edit this ticket.")
+
     if request.method == "POST":
         form = TicketForm(request.POST, instance=ticket)
         if form.is_valid():
             form.save()
             return redirect("ticket_detail", ticket_id=ticket.id)
-        if ticket.owner and ticket.owner != request.user and not request.user.is_staff:
-            return HttpResponseForbidden("You do not have permission to edit this ticket.")
+        
     else:
         form = TicketForm(instance=ticket)
-    return render(request, "tickets/ticket_form.html", {"form": form, "ticket": ticket, "mode": "edit"})
 
-
+    return render(
+        request,
+        "tickets/ticket_form.html",
+        {"form": form, "ticket": ticket, "mode": "edit"},
+    )
 @login_required
 def ticket_delete(request, ticket_id):
     ticket = get_object_or_404(Ticket, id=ticket_id)
@@ -97,6 +103,6 @@ def ticket_delete(request, ticket_id):
     if request.method == "POST":
         ticket.delete()
         return redirect("ticket_list")
-    if ticket.owner and ticket.owner != request.user and not request.user.is_staff:
+    if ticket.owner != request.user and not request.user.is_staff:
         return HttpResponseForbidden("You do not have permission to edit this ticket.")
     return render(request, "tickets/ticket_confirm_delete.html", {"ticket": ticket})
