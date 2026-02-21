@@ -1,6 +1,6 @@
 from django.shortcuts import redirect, render, get_object_or_404
-from .models import Ticket
-from .forms import TicketForm
+from .models import Ticket, TicketComment
+from .forms import TicketForm, TicketCommentForm
 from django.db.models import Q
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
@@ -38,7 +38,26 @@ def ticket_list(request):
 
 def ticket_detail(request, ticket_id):
     ticket = get_object_or_404(Ticket, id=ticket_id)
-    return render(request, "tickets/ticket_detail.html", {"ticket": ticket})
+    comments = ticket.comments.all().order_by("-created_at")
+
+    comment_form = None
+    if request.user.is_authenticated:
+        comment_form = TicketCommentForm()
+
+        if request.method == "POST":
+            comment_form = TicketCommentForm(request.POST)
+            if comment_form.is_valid():
+                comment = comment_form.save(commit=False)
+                comment.ticket = ticket
+                comment.author = request.user
+                comment.save()
+                return redirect("ticket_detail", ticket_id=ticket.id)
+
+    return render(
+        request,
+        "tickets/ticket_detail.html",
+        {"ticket": ticket, "comments": comments, "comment_form": comment_form},
+    )
 
 @login_required
 def ticket_create(request):
